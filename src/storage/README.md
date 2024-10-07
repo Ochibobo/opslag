@@ -10,7 +10,7 @@ buffer pool manager. This document describes the following:
 - [ ] The storage model
   - [ ] Opslag is a Key/Value store
   - [ ] It uses the PAX storage model; a combination of row-oriented & column-oriented storage model
-- [ ] The file organization structure
+- [ ] The file organization structurev
   - [ ] Heap file organization
   - [ ] Tree file organization
   - [ ] Sequential/Sorted File organization
@@ -99,3 +99,6 @@ buffer pool manager. This document describes the following:
   - [ ] Decimal
   - [ ] Money/Currency
   - [ ] Dates type
+- [ ] Consider Object Storages
+  - [ ] S3
+  - [ ] SlateDB
