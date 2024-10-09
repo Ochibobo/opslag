@@ -121,4 +121,38 @@ buffer pool manager. This document describes the following:
   - [ ] Graph Database structure
   - [ ] Vector indices
     - [ ] Approximate nearest neighbor
-  - [ ] 
+
+
+#### Storage implementation considerations:
+- [ ] Separate the files:
+    - [ ] Data file
+    - [ ] Index file
+- [ ] Consider using deletion markers - `tombstones`.
+- [ ] Disks are accessed using system calls
+- [ ] The file format must be easy to construct, modify and interpret
+- [ ] Garbage collection & fragmentation
+- [ ] Binary encoding
+- [ ] Endianness:
+  - [ ] Big Endian
+  - [ ] Little Endian
+  - [ ] `RocksDB` has platform-specific definitions that help identify target platform byte order
+- [ ] Most numeric data types are represented as fixed-sized values
+- [ ] Consider serialization and deserialization
+- [ ] Come up with a binary format
+- [ ] Consider the `IEEE` standard for the different primitive types.
+  - [ ] Like `IEEE 754` for `Floats`
+  - [ ] `32-bit` float represents a single-precision value
+  - [ ] `Double` represents a double-precision float.
+  - [ ] `Pascal` & `German` strings
+- [ ] Bit-packed data:
+  - [ ] Booleans
+  - [ ] Enums
+  - [ ] Flags
+- [ ] [Bit packing](https://www.databass.dev/links/58)
+- [ ] Bitmasks and bitwise operations
+- [ ] How addressing is going to be done:
+  - [ ] Split into same-size pages; for in-place updates
+  - [ ] Single/multiple contiguous blocks
+- [ ] File header & footer 
+  - [ ] Fixed size
+  - [ ] Quick to access 

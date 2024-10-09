@@ -67,4 +67,16 @@
 - [ ] Recovery management
 - [ ] Column limits
   - [ ] The number of limits
+
+### Random Notes
+- [ ] Database server has a network layer
+- [ ] Databases usually have a separate server
+- [ ] We have an OS interface layer for file handling
+- [ ] The storage engine has:
+  - [ ] Disk Storage Manager
+  - [ ] Buffer Manager
+  - [ ] Index Manager
+- [ ] Shard management sits on top of the storage manager
+- [ ] It sits together with the cluster manager
 - [ ] 
+￼
