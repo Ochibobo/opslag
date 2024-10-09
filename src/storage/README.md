@@ -102,3 +102,23 @@ buffer pool manager. This document describes the following:
 - [ ] Consider Object Storages
   - [ ] S3
   - [ ] SlateDB
+
+
+#### Questions:
+- [ ] Columnar vs Row oriented?
+  - [ ] An engine per table?
+    - [ ] The default enfine being row-oriented
+      - [ ] Similar to InnoDB/Block/Row storage format
+    - [ ] Support for column oriented structures too
+      - [ ] SSTables come here
+      - [ ] Think through how compaction works
+  - [ ] Column storage choice?
+    - [ ] On Disk
+    - [ ] Fully on RAM
+- [ ] Look into kdb.
+- [ ] Support for special structures?
+  - [ ] Time based indices
+  - [ ] Graph Database structure
+  - [ ] Vector indices
+    - [ ] Approximate nearest neighbor
+  - [ ] 
