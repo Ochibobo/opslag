@@ -157,3 +157,19 @@ buffer pool manager. This document describes the following:
   - [ ] Fixed size
   - [ ] Quick to access 
 - [ ] Create a file format
+  - [ ] Expose an API for interaction with it
+  - [ ] Perform benchmarks
+  - [ ] Choose an appropriate language
+    - [ ] Rust
+    - [ ] C
+  - [ ] Probably NSM based (row oriented)
+    - [ ] Come up with a name for it
+      - [ ] Apricot
+    - [ ] Inspirations:
+      - [ ] MySQL
+        - [ ] Barracuna
+        - [ ] Antelope
+      - [ ] Postgres
+        - [ ] Heap File
+      - [ ] SQLite
+        - [ ] B-Tree files
