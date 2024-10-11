@@ -156,3 +156,4 @@ buffer pool manager. This document describes the following:
 - [ ] File header & footer 
   - [ ] Fixed size
   - [ ] Quick to access 
+- [ ] Create a file format
