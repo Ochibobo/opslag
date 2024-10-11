@@ -173,3 +173,28 @@ buffer pool manager. This document describes the following:
         - [ ] Heap File
       - [ ] SQLite
         - [ ] B-Tree files
+
+#### File Formart Design Decisions
+- [ ] File Meta-Data
+  - Self-contained to increase portability. COntain all in4 to interpret contents without external dependencies
+  - Each file maintains glibal meta-data, usually on its footer, about its contents:
+    - Table Schema (Thrift, Protobuf)
+    - Row Group offsets/length
+    - Tuple counts/ zone maps
+- [ ] Format layout
+  - PAX model with row groups and column chunks
+  - Size of row groups varies and makes compute/memory trade-offs.
+- [ ] Type system
+  - Physical - low-level byte rep (IEEE-74)
+  - Logical - auxilliary types that map to physical types
+  - ORC has a more complete set of physical types
+- [ ] Encoding schemes
+  - How the format stores bytes for contiguous/related data
+  - Dictionary encoding
+  - Run-Length Encoding
+  - Bit-packing
+  - Delta encoding
+  - Frame of reference
+- [ ] Block Compression
+- [ ] Filters
+- [ ] Nested Data
