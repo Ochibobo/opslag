@@ -99,6 +99,7 @@ buffer pool manager. This document describes the following:
   - [ ] Decimal
   - [ ] Money/Currency
   - [ ] Dates type
+  - [ ] Vector
 - [ ] Consider Object Storages
   - [ ] S3
   - [ ] SlateDB
