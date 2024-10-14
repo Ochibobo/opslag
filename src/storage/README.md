@@ -196,5 +196,44 @@ buffer pool manager. This document describes the following:
   - Delta encoding
   - Frame of reference
 - [ ] Block Compression
+  - Avoid this in general
 - [ ] Filters
 - [ ] Nested Data
+- [ ] For variable length data:
+  - [ ] Postgres TOAST
+    - [ ] Created per table
+    - [ ] `Toast_tuple_threshold` - 2KB (by default)
+      - If a tuple hits the 2KB threshold, it's toasted
+    - [ ] Compression may yield success
+    - [ ] Use a `Toast table` with a pointer from the main table
+    - [ ] `PLAIN` mechism:
+      - [ ] No compression 
+      - [ ] No toast table (out of line storage)
+      - [ ] Show the strategy when storin the table
+    - [ ] `MAIN` mechanism:
+      - [ ] Compression allowed
+      - [ ] No toast tbale.
+        - [ ] In some cases, it will.
+      - [ ] The storage strategy is per column
+    - [ ] `EXTENDED` mechanism:
+      - [ ] Both compression & toastable are allowed
+      - [ ] Include a way to see the actual length of the column vs the stored length
+        - [ ] This shades more light into whether compression was used or not.
+      - [ ] Compression doesn't always lead to a toast table
+      - [ ] In PG, the limit to hit the toast table is 2000 bytes.
+    - [ ] The toastable columns stores values in 2kb pages.
+      - [ ] And multiples of 2KB. 
+    - [ ] `EXTERNAL` mechanism:
+      - [ ] No Compression
+      - [ ] Only toast possible.
+      - [ ] Used when compression has an overhead.
+    - [ ] `Toasting internal algorithm`:
+      - [ ] `toast_max_chunk_size`
+      - [ ] Start with the largest external and extended fields
+      - [ ] If row still doesn't fit, try other external and extended fields
+      - [ ] Then try to compress main fields
+      - [ ] If size > 2KB, send main to toast table
+      - [ ] Code in `heaptoast.c`
+    - [ ] Toast tables have a performance cost.
+    - [ ] `pglz` and `lz4` compression strategies used.
+    - [ ] 
