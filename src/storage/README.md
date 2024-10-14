@@ -200,6 +200,7 @@ buffer pool manager. This document describes the following:
   - Avoid this in general
 - [ ] Filters
 - [ ] Nested Data
+  - [ ] Shredded columns
 - [ ] For variable length data:
   - [ ] Postgres TOAST
     - [ ] Created per table
