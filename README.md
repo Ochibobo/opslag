@@ -36,7 +36,6 @@
           - [ ] DBMS interprets bytes into attribute types & values
           - [ ] Tuple Header
           - [ ] Tuple Data
-          - [ ] 
       - [ ] Column Based 
       - [ ] Index Based
     - [ ] Free Space
@@ -77,6 +76,5 @@
   - [ ] Buffer Manager
   - [ ] Index Manager
 - [ ] Shard management sits on top of the storage manager
-- [ ] It sits together with the cluster manager
-- [ ] 
+- [ ] It sits together with the cluster manager 
 ￼
