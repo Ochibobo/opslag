@@ -238,4 +238,8 @@ buffer pool manager. This document describes the following:
       - [ ] Code in `heaptoast.c`
     - [ ] Toast tables have a performance cost.
     - [ ] `pglz` and `lz4` compression strategies used.
-    - [ ] 
+
+
+#### Buffer Pool
+
+The storage layer of this storage engine is handles the  `buffer pool manager`. The actual storage layer, the file structure & layout, is implemented by [Apricot](https://github.com/Ochibobo/apricot/tree/master), a `row-oriented storage structure` implemented in `C`. It will expose an API through which this buffer pool will interact with the underlying file system. 
