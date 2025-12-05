@@ -78,3 +78,25 @@
 - [ ] Shard management sits on top of the storage manager
 - [ ] It sits together with the cluster manager 
 ￼
+
+
+
+#### Page implementation
+- [ ] Page Directory
+- [ ] Free Pages
+- [ ] Page
+  - [ ] ID/Number
+  - [ ] Index pages
+  - [ ] Overflow pages
+- [ ] Version
+- [ ] Schema
+- [ ] Slotted Pages
+- [ ] Bitmap for nulls
+- [ ] Encryption at rest
+- [ ] Concurrency support
+  - [ ] MVCC
+- [ ] Conf file
+- [ ] Security/Auth
+- [ ] Page Header
+- [ ] WAL
+- [ ] Checksum
