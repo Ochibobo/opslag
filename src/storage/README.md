@@ -310,4 +310,52 @@ Buffer replacement policies:
   - Index organized storage
   - HDFS, Google Colossus, S3 Express; can't do in-place updates; only appends.
   - 
-  - 
+
+#### Storage Engine
+- File Manager
+- Buffer Pool Manager
+- Transaction Manager
+  - Lock Manager
+  - Write Batch Manager
+    - Buffering
+    - Atomicity
+    - Memory Tracking
+      - Track how much memory pending changes are consuming. If a transaction becomes too large, the manager can be configured to reject further writes to prevent the system from running out of RAM
+  - Snapshot Manager
+    - Responsible for `I`solation; ensures that a transaction sees a consistent version of the data, even if other background processes are modifying the database
+    - Sequence Numbers - every single write is tagged with a globally increasing 64-bit sequence number ($seq$)
+    - Point-In-Time View - When a snapshot is created, the Snapshot Manager records the current highest sequence number
+    - Filtering - When the transaction performs a fetch or an iterator scan, the Snapshot Manager filters out any data with a seq > 100. Even if another thread writes a new value at seq = 101, your transaction will ignore it, seeing the database exactly as it looked the moment the snapshot was taken.
+    - Resource Management - The manager keeps track of "active" snapshots. Do not delete old versions of a key if an active snapshot still needs them to provide a consistent view.
+  - WAL
+  - The Wait-For Graph
+    - The Graph: The engine maintains a "Wait-For" graph where nodes are transactions and edges represent one transaction waiting for another to release a lock.
+    - The Cycle: A deadlock exists if, and only if, there is a cycle in this graph (e.g., Transaction A waits for B, and Transaction B waits for A).
+    - The Kill: Once a cycle is detected, the Transaction Manager must intervene. It picks a "victim"—usually the transaction that has done the least amount of work—and rolls it back (aborts it) to break the cycle.
+  - Lock Timeouts
+  - It is worth noting that LSM-tree engines like RocksDB experience deadlocks much less frequently. Because they are "append-only" and use sequence numbers for versions, they don't have to lock existing data pages to update them.
+- Index Manager
+- Page Writer
+  - Dedicated background processes that manage the movement of data between RAM and Disk.
+  - Background Writer: Continually pushes "dirty" pages to disk to ensure there is always free space in the Buffer Pool for new data.
+  - Checkpointer: Periodically ensures that all modified data up to a certain point is written to the physical data files, allowing the WAL to be recycled.
+- MVCC Manager/ Undo Log
+- Recovery Manager
+  - ARIES : Algorithm for Recovery and Isolation Exploiting Semantics.
+  - Phase 1: Analysis
+    - The engine scans the Write-Ahead Log (WAL) from the last known "Checkpoint" to the end of the file.
+    - Identify which transactions were still "In Progress" and which data pages were "Dirty" (modified in RAM but not yet on disk) at the moment of the crash
+  - Uses the checkpoint
+    - Freeze/Flush: The engine identifies all modified pages in the Buffer Pool (for NSM) or the current MemTable (for LSM).
+    - Sync to Disk: These pages are flushed to the data files or SSTables/ Disk Files
+    - Log Marking: A special "Checkpoint Record" is written to the WAL. This record says: "Everything before this point is safely on the permanent disk."
+    - Pruning: Once the checkpoint is complete, the engine can delete or recycle the old WAL files that came before the checkpoint, saving disk space.
+  - Phase 2: Redo (Repeat History)
+    - The engine "replays" every single operation found in the WAL that happened after the last checkpoint.
+    - Bring the database state exactly to where it was the microsecond before the power failed. Even if a transaction eventually crashed, its changes are "Redone" here to ensure the physical disk matches the log's history.
+  - Phase 3: Undo (Rollback)
+    - The engine looks at the list of transactions that never reached a "Commit" status in the log
+    - It reverses their changes. In an NSM engine, it uses Undo Logs to restore the old values. In an LSM engine like RocksDB, it simply ignores those entries in the MemTable or writes "Tombstones" to cancel them out
+  - Modern databases try to avoid "Sharp Checkpoints" because they freeze the system while data is being written. Instead, they use Fuzzy Checkpointing:
+    - Sharp Checkpoint: Stops all incoming writes, flushes everything, then resumes. This causes a "spike" in latency where the database seems to hang.
+    - Fuzzy Checkpoint: The engine slowly flushes dirty pages in the background while still allowing new transactions. The Checkpoint Record in the log then points to a "range" of time rather than a single frozen moment.
