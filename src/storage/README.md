@@ -243,3 +243,71 @@ buffer pool manager. This document describes the following:
 #### Buffer Pool
 
 The storage layer of this storage engine is handles the  `buffer pool manager`. The actual storage layer, the file structure & layout, is implemented by [Apricot](https://github.com/Ochibobo/apricot/tree/master), a `row-oriented storage structure` implemented in `C`. It will expose an API through which this buffer pool will interact with the underlying file system. 
+
+
+#### OS Directives
+Used when storage engine relies on `mmap`.
+`madvise`
+`mlock`
+`msync`
+
+Research: Inform the Database system the memory size it can use on startup. 
+Don't run another system on your database machine.
+
+A `frame` is a memory location where we put `pages`.
+Page directory: all frames that exist.
+Page table: mapping from a  page id to a frame.
+
+Buffer replacement policies:
+- Page eviction; this is basically caching.
+- Cater for:
+  - Speed
+  - Accuracy
+  - Correctness
+  - Metadata overload handling
+- LRU
+- Clock
+  - Linux has a multi-hand clock
+  - Faster than LRU
+- Susceptible to `sequential flooding` (LRU & Clock)
+- LFU
+  - Logarithmic complexity relative to cache size
+  - Ignores time and accumulates stale pages with high frequency counts that may no longer be relevant
+- LRU-K is appropriate
+  - Used in SQL-Server, Postgres earlier versions
+  - Maintain `ghost cache`
+  - MySQL uses approximate LRU-K
+- Adaptive Replacement Policy
+  - Used in Postgres, DB2, ZFS
+- Consider `localization`
+- Use `priority hints`
+  - Hint a page's importance to the buffer pool
+- Evict clean pages; dirty pages are to be written to disk (background writing/ page cleaning/ buffer flushing)
+  - After flushing; page can be evicted
+- Don't write dirty pages before their logs are written
+- Re-order and batch I/O requests
+- Linux has deadline or noop(FIFO) scheduler
+- DBMS maintains internal queues to track read/write requests from the entire system
+- Compute priorities based on several factors:
+  - Sequential vs Random I/O.
+  - Critical Path task vs Background task
+  - Table vs Index vs Log vs Ephemeral Data
+  - Transaction information
+  - User Based SLA
+- Bypass OS cache using `O_DIRECT`
+  - Redundant page copies
+  - Different eviction policies
+  - Loss of control over file I/O
+  - Can use DataPlant/DataKit (DpDk)
+- Postgres18: accelerate disk reads with async I/Os
+- Fsync errors
+- Record IDs can be:
+  - File Id, Page Id, Slot #
+- Maximum number of columns:
+  - 216 postgres
+  - 1000 Oracle
+  - Tuple organized storage
+  - Index organized storage
+  - HDFS, Google Colossus, S3 Express; can't do in-place updates; only appends.
+  - 
+  - 
