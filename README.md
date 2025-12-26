@@ -1,4 +1,4 @@
-#### Opslag Storage Engine
+#### Lignum Storage Engine
 - [ ] Storage Manager
   - [ ] File structure
     - [ ] Proprietary

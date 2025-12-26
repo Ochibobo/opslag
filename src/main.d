@@ -2,5 +2,5 @@ import std.stdio;
 
 void main()
 {
-    writeln("Opslag has began");
+    writeln("Lignum has began");
 }

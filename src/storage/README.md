@@ -1,6 +1,6 @@
 ## Storage Engine
 
-This document describes the implementation of the `Opslag Storage Engine (OsE)`. This spans from disk storage to memory management using a
+This document describes the implementation of the `Lignum Storage Engine (OsE)`. This spans from disk storage to memory management using a
 buffer pool manager. This document describes the following:
 
 - [ ] The database structure
@@ -8,9 +8,9 @@ buffer pool manager. This document describes the following:
   - [ ] Each table is a file
   - [ ] Each index is a file too
 - [ ] The storage model
-  - [ ] Opslag is a Key/Value store
+  - [ ] Lignum is a Key/Value store
   - [ ] It uses the PAX storage model; a combination of row-oriented & column-oriented storage model
-- [ ] The file organization structurev
+- [ ] The file organization structurer
   - [ ] Heap file organization
   - [ ] Tree file organization
   - [ ] Sequential/Sorted File organization
@@ -34,7 +34,7 @@ buffer pool manager. This document describes the following:
         - [ ] An offset page for variable length data
     - [ ] Layout
       - [ ] Convert types to bytes
-      - [ ] Opslag us responsible to interpret bytes back to attributes & values
+      - [ ] Lignum is responsible to interpret bytes back to attributes & values
       - [ ] Tuples have a header describing their content
       - [ ] Tuple data
         - [ ] Determine bytes layout
