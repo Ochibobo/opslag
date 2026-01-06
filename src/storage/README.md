@@ -359,3 +359,22 @@ Buffer replacement policies:
   - Modern databases try to avoid "Sharp Checkpoints" because they freeze the system while data is being written. Instead, they use Fuzzy Checkpointing:
     - Sharp Checkpoint: Stops all incoming writes, flushes everything, then resumes. This causes a "spike" in latency where the database seems to hang.
     - Fuzzy Checkpoint: The engine slowly flushes dirty pages in the background while still allowing new transactions. The Checkpoint Record in the log then points to a "range" of time rather than a single frozen moment.
+
+
+#### Components
+- [ ] File(Disk) Manager
+  - [ ] PageWriter
+  - [ ] PageReader
+    - [ ] Index pages
+    - [ ] Data pages
+    - [ ] Extended pages e.g vectors, blobs.
+  - [ ] File Descriptors Cache Manager
+- [ ] WAL Manager
+  - [ ] WAL Writer
+  - [ ] WAL Reader; to answer queries.
+- [ ] Buffer Pool Manager
+  - [ ] Cache Manager
+- [ ] TelemetryManager
+  - [ ] Logs
+  - [ ] Traces
+- [ ] 
