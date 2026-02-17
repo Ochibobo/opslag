@@ -360,6 +360,91 @@ Buffer replacement policies:
     - Sharp Checkpoint: Stops all incoming writes, flushes everything, then resumes. This causes a "spike" in latency where the database seems to hang.
     - Fuzzy Checkpoint: The engine slowly flushes dirty pages in the background while still allowing new transactions. The Checkpoint Record in the log then points to a "range" of time rather than a single frozen moment.
 
+#### Database Logging
+- The goal is durability
+- Recovery Algorithms have 2 parts:
+  - Actions during normal txn processing to esure the DBMS can recover from a failure
+  - Actions after a failure to recover to an atomic state
+- `Undo` - remove effects of an incomplete or aborted txn
+- `Redo` - re-applying effects of a committed txn
+- Support depends on how DBMS manages the buffer pool.
+- Steal policy:
+  - Whether the DBMS can evict a dirty object in the buffer pool modified by an uncommitted txn and overwite the most recent committed version of that object in non-volatile storage
+  - Steal - Eviction + overwriting is allowed; provides more options on what frame it can free up.
+  - No-steal - Steal not allowed; every page has to stay pinned; cannot be evicted.
+- Force Policy:
+  - Whether the DBMS requires that all updates made by a txn are written back to a non-volatile storage before the txn can commit.
+    - Force: Write-back required; easier for recovery; slow as commit means we flush everything.
+    - No-Force: Write-back not required
+- A simple trick is to `copy` the page that with changes that committed and flush that out to disk (no-steal + force).
+  - Don't have to undo changes of an aborted txn because they were not written to disk
+  - Don't need to redo chnages of a committed txn as all changes are witten to disk at commit time (assuming atomic hardware writes)
+  - Cannot exceed __write sets__ that exceed amount of physical memory available
+  - Will burn out hardware really quick (SSD have a limited number of rights per cell)
+- `Shadow paging` - only copy page on write to create 2 versiions:
+  - __Master__: contains only changes from committed txns
+  - __Shadow__: temp db with changes made from uncommitted txns
+  - To install updates when a txn commits, overwrite the root so it points to the shadow, thereby swapping the master & shadow.
+  - No Steal + Force
+  - Assume 1 write & multiple reads
+    - In SQL `BEGIN READ ONLY`
+  - Single write multiple readers (SQLite)
+  - Rollbacks and recovery is easy
+  - Undo - remove shadow pages. Leave master and DB root pointer only.
+  - Redo is not needed.
+  - Use copy-on-write (to disk too).
+  - This SQLite in `rollback mode`; uses journals.
+- `WAL`
+  - Log file separate from DB files.
+  - STEAL + NO-Force
+  - Write to disk the log file records that correspond to change to a database object it can flush that object to disk
+  - Consider `fsync`; but there's a penalty for synchronous commits.
+  - Write a `<BEGIN>` record to the log for each txn to mark the starting point
+  - Append a record every time a txn changes an object
+    - txn id
+    - Object id
+    - Before Value (UNDO)
+    - After Value (REDO)
+  - Consider append-only MVCC
+  - Append `<COMMIT>` recod to the log when a txn finishes
+  - Make sure that all log records are flushed before it returns an ack to the application
+  - Have a `WAL Buffer`; smaller than a buffer pool though
+  - Put the entry in the WAL buffer first before we update the page in the buffer pool as we need to capture the log sequence number (lsn) in the buffer pool page
+  - Flushing every time a txn commits is a bottleneck
+  - Can ue group commit optimization to batch to multiple log flushes togethet to amortize overhead
+    - When buffer is full
+    - Or a timeout
+- `Logging Schemes`
+  - Physical logging
+    - Byte-level changes made to specific page
+    - Like git diff
+  - Logical logging
+    - Record high level operation executed by txns
+    - Example: UPDATE, DELETE & INSERT queries
+    - Have to handle non-determinism (WHERE val = RANDOM() or TIMESTAMP())
+  - Physiological logging
+    - Physical-to-a-page, logical-within-a-page
+    - Byte-level changes to a single tuple idenitified by a page-id +solt-number
+    - Does not specify organization of the page
+- Change Data Capture (CDC)
+  - ETL
+  - Automatically propagate changes to external sources to replicate and sych database contents
+  - Approaches:
+    - WAL (debezium)
+    - Triggers
+    - Timestamps
+-  `Checkpoint` set by the system periodically.
+   -  Hint to on how far back a ystem needs to reply WAL after crash
+   -  Truncate WAL to a certain safe point
+   -  Blocking/Considtent checkpoint:
+      -  Pause all queries
+      -  Flush all WAL records in memory to disk
+      -  Flush all modified pages in the buffer pool to disk
+      -  Write Checkpoint to WAL
+      -  Resume executiom
+   -  Often, 5 minutes is the default
+   -  
+- 
 
 #### Components
 - [ ] File(Disk) Manager
