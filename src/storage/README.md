@@ -177,7 +177,7 @@ buffer pool manager. This document describes the following:
 
 #### File Formart Design Decisions
 - [ ] File Meta-Data
-  - Self-contained to increase portability. COntain all in4 to interpret contents without external dependencies
+  - Self-contained to increase portability. Contain all in4 to interpret contents without external dependencies
   - Each file maintains glibal meta-data, usually on its footer, about its contents:
     - Table Schema (Thrift, Protobuf)
     - Row Group offsets/length
