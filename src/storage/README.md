@@ -1,6 +1,6 @@
 ## Storage Engine
 
-This document describes the implementation of the `Lignum Storage Engine (OsE)`. This spans from disk storage to memory management using a
+This document describes the implementation of the `Lignum Storage Engine (LisE)`. This spans from disk storage to memory management using a
 buffer pool manager. This document describes the following:
 
 - [ ] The database structure
@@ -462,4 +462,14 @@ Buffer replacement policies:
 - [ ] TelemetryManager
   - [ ] Logs
   - [ ] Traces
+
+
+#### Types
+- [ ] Int
+  - [ ] 128-bit
+  - [ ] 64-bit (long)
+  - [ ] 32-bit
+  - [ ] 16-bit
+  - [ ] 8-bit
+- [ ] Boolean
 - [ ] 
