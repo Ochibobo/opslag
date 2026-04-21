@@ -100,3 +100,10 @@
 - [ ] Page Header
 - [ ] WAL
 - [ ] Checksum
+
+#### Storage concerns
+The goal is to store facts in a way that enables querying experience/episodes.
+- [ ] A KV store
+- [ ] A graph extension
+- [ ] A time series index
+- [ ] A new Query DSL
