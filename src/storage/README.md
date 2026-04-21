@@ -472,4 +472,7 @@ Buffer replacement policies:
   - [ ] 16-bit
   - [ ] 8-bit
 - [ ] Boolean
+- [ ] Float
+  - [ ] 64-bit
+  - [ ] 32-bit
 - [ ] 
